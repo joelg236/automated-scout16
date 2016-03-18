@@ -38,7 +38,8 @@ block content
                 div Red (P): #{match.predicted_score.red}
 
             each team in scores.red.teams
-                span.label.label-danger(href='https://www.thebluealliance.com/team/#{team.substr(3)}') #{team}
+                a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')
+                    span.label.label-danger #{team}
 
         div.panel-body
             if scores.blue.score !== -1
@@ -47,4 +48,5 @@ block content
                 div Blue (P): #{match.predicted_score.blue}
 
             each team in scores.blue.teams
-                span.label.label-primary(href='https://www.thebluealliance.com/team/#{team.substr(3)}') #{team}
+                a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')
+                    span.label.label-primary #{team}
