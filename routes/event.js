@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var numeric = require('numeric');
 var tba = require('thebluealliance')('node-thebluealliance','TBA v2 API','1.1.1');
 
 router.get('/*', function(req, res, next) {
@@ -35,15 +36,54 @@ router.get('/*', function(req, res, next) {
                   teams[team].won += 1;
               }
 
-              teams[team].opr = teams[team].matches.reduce(function (p, c) {
-                return p + c.score;
-              }, 0) / Object.keys(teams[team].matches).length;
-
               teams[team].ropr = teams[team].won / Object.keys(teams[team].matches).length;
             }
           }
         }
       }
+
+      var team_numbers = [], points = [], played = new Array(teams.length);
+      var num_teams = Object.keys(teams).length;
+      for (var i = 0; i < num_teams; i++) {
+        played[i] = new Array(num_teams);
+        for (var x = 0; x < num_teams; x++) {
+          played[i][x] = 0;
+        }
+      }
+
+      for (team in teams) {
+        team_numbers.push(teams[team].team);
+
+        points.push(teams[team].matches.reduce(function (p, c) {
+          return p + c.score;
+        }, 0));
+      }
+
+      for (match in data) {
+        var redteams = data[match].alliances.red.teams.map(function (t) {
+          return team_numbers.indexOf(Number(t.substr(3)));
+        });
+        var blueteams = data[match].alliances.blue.teams.map(function (t) {
+          return team_numbers.indexOf(Number(t.substr(3)));
+        });
+        if (data[match].score_breakdown != null) {
+          for (team1 in redteams) {
+            for (team2 in redteams) {
+              played[redteams[team1]][redteams[team2]]++;
+            }
+          }
+          for (team1 in blueteams) {
+            for (team2 in blueteams) {
+              played[blueteams[team1]][blueteams[team2]]++;
+            }
+          }
+        }
+      }
+
+      var opr = numeric.solve(played, points);
+      opr.forEach(function(e, i) {
+        teams['frc' + team_numbers[i]].opr = e;
+      });
 
       data = data.sort(function(a, b) {
         return a.match_number - b.match_number;
