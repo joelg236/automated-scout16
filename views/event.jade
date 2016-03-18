@@ -1,0 +1,50 @@
+extends layout
+
+block content
+    h1 #{title} #{event}
+
+    table.table
+        thead
+            tr
+                th Team
+                th OPR
+                th ROPR
+                th Wins
+                th PWins
+                th TWins
+            tbody
+                each team in teams
+                    tr
+                        td= team.team
+                        td= team.opr.toFixed(2)
+                        td= team.ropr.toFixed(2)
+                        td= team.won
+                        td= team.pwon
+                        td= team.won + team.pwon
+
+    h2 Matches
+
+    div.panel.panel-default
+    each match in matches
+        h3
+            a(href='https://www.thebluealliance.com/match/#{match.key}') #{match.comp_level} #{match.match_number}
+
+        - var scores = match.alliances
+
+        div.panel-body
+            if scores.red.score !== -1
+                div Red: #{scores.red.score}
+            else
+                div Red (P): #{match.predicted_score.red}
+
+            each team in scores.red.teams
+                span.label.label-danger(href='https://www.thebluealliance.com/team/#{team.substr(3)}') #{team}
+
+        div.panel-body
+            if scores.blue.score !== -1
+                div Blue: #{scores.blue.score}
+            else
+                div Blue (P): #{match.predicted_score.blue}
+
+            each team in scores.blue.teams
+                span.label.label-primary(href='https://www.thebluealliance.com/team/#{team.substr(3)}') #{team}
