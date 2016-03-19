@@ -9,9 +9,9 @@ function Team(id) {
     this.matches = [];
     this.rank_points = 0;
     this.breaches = 0;
-    this.breach_opr = 0;
+    this.breaches_opr = 0;
     this.captures = 0;
-    this.capture_opr;
+    this.captures_opr = 0;
     this.defense = 0;
     this.defense_opr = 0;
     this.scales = 0;
@@ -145,26 +145,39 @@ router.get('/*', function(req, res, next) {
 
             matches = matches.sort(function(a, b) {
                 return a.match_number - b.match_number;
-            }).map(function(a) {
-                if (a.comp_level === 'qm') {
-                    a.comp_level = 'Qualification';
+            }).map(function(match) {
+                if (match.comp_level === 'qm') {
+                    match.comp_level = 'Qualification';
                 } else {
-                    a.comp_level = 'Elimination';
+                    match.comp_level = 'Elimination';
                 }
 
-                if (a.score_breakdown == null) {
-                    var blue_score = 0, red_score = 0;
-                    blue_score = teams[a.alliances.blue.teams[0]].opr
-                               + teams[a.alliances.blue.teams[1]].opr
-                               + teams[a.alliances.blue.teams[2]].opr;
-                    red_score = teams[a.alliances.red.teams[0]].opr
-                              + teams[a.alliances.red.teams[1]].opr
-                              + teams[a.alliances.red.teams[2]].opr;
+                if (match.score_breakdown == null) {
+                    var blue_score = teams[match.alliances.blue.teams[0]].opr
+                                   + teams[match.alliances.blue.teams[1]].opr
+                                   + teams[match.alliances.blue.teams[2]].opr;
+                    var red_score = teams[match.alliances.red.teams[0]].opr
+                                  + teams[match.alliances.red.teams[1]].opr
+                                  + teams[match.alliances.red.teams[2]].opr;
+                    var blue_breach = teams[match.alliances.blue.teams[0]].breaches_opr
+                                     + teams[match.alliances.blue.teams[1]].breaches_opr
+                                     + teams[match.alliances.blue.teams[2]].breaches_opr;
+                    var red_breach = teams[match.alliances.red.teams[0]].breaches_opr
+                                    + teams[match.alliances.red.teams[1]].breaches_opr
+                                    + teams[match.alliances.red.teams[2]].breaches_opr;
+                    var blue_capture = teams[match.alliances.blue.teams[0]].captures_opr
+                                     + teams[match.alliances.blue.teams[1]].captures_opr
+                                     + teams[match.alliances.blue.teams[2]].captures_opr;
+                    var red_capture = teams[match.alliances.red.teams[0]].captures_opr
+                                    + teams[match.alliances.red.teams[1]].captures_opr
+                                    + teams[match.alliances.red.teams[2]].captures_opr;
 
-                    a.predicted_score = { blue: blue_score, red: red_score };
+                    match.predicted_score = { blue: blue_score, red: red_score };
+                    match.predicted_breach = { blue: blue_breach, red: red_breach };
+                    match.predicted_capture = { blue: blue_capture, red: red_capture };
                 }
 
-                return a;
+                return match;
             });
 
             for (match in matches) {
@@ -179,6 +192,18 @@ router.get('/*', function(req, res, next) {
                         teams[match.alliances.red.teams[1]].predicted_rank_points += 2;
                         teams[match.alliances.red.teams[2]].predicted_rank_points += 2;
                     }
+                    teams[match.alliances.red.teams[0]].predicted_rank_points += match.predicted_breach.red;
+                    teams[match.alliances.red.teams[1]].predicted_rank_points += match.predicted_breach.red;
+                    teams[match.alliances.red.teams[2]].predicted_rank_points += match.predicted_breach.red;
+                    teams[match.alliances.blue.teams[0]].predicted_rank_points += match.predicted_breach.blue;
+                    teams[match.alliances.blue.teams[1]].predicted_rank_points += match.predicted_breach.blue;
+                    teams[match.alliances.blue.teams[2]].predicted_rank_points += match.predicted_breach.blue;
+                    teams[match.alliances.red.teams[0]].predicted_rank_points += match.predicted_capture.red;
+                    teams[match.alliances.red.teams[1]].predicted_rank_points += match.predicted_capture.red;
+                    teams[match.alliances.red.teams[2]].predicted_rank_points += match.predicted_capture.red;
+                    teams[match.alliances.blue.teams[0]].predicted_rank_points += match.predicted_capture.blue;
+                    teams[match.alliances.blue.teams[1]].predicted_rank_points += match.predicted_capture.blue;
+                    teams[match.alliances.blue.teams[2]].predicted_rank_points += match.predicted_capture.blue;
                 }
             }
 

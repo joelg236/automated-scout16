@@ -22,7 +22,7 @@ block content
                         td= team.number
                         td= team.opr.toFixed(2)
                         td= team.rank_points
-                        td= team.rank_points + team.predicted_rank_points
+                        td= (team.rank_points + team.predicted_rank_points).toFixed(2)
                         td= (team.opr / (team.rank_points + team.predicted_rank_points)).toFixed(2)
                         td= team.breaches_opr.toFixed(2)
                         td= team.captures_opr.toFixed(2)
@@ -43,8 +43,7 @@ block content
             if scores.red.score !== -1
                 div Red: #{scores.red.score}
             else
-                div Red (P): #{match.predicted_score.red.toFixed(2)}
-
+                div Red (P): #{match.predicted_score.red.toFixed(2)} (Breach #{match.predicted_breach.red.toFixed(2)}) (Capture #{match.predicted_capture.red.toFixed(2)})
             each team in scores.red.teams
                 a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')
                     span.label.label-danger #{team}
@@ -53,7 +52,7 @@ block content
             if scores.blue.score !== -1
                 div Blue: #{scores.blue.score}
             else
-                div Blue (P): #{match.predicted_score.blue.toFixed(2)}
+                div Blue (P): #{match.predicted_score.blue.toFixed(2)} (Breach #{match.predicted_breach.blue.toFixed(2)}) (Capture #{match.predicted_capture.blue.toFixed(2)})
 
             each team in scores.blue.teams
                 a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')
