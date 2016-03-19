@@ -17,11 +17,13 @@ tba.getListOfEvents(function(err, data) {
 
         if (event.official) {
             var from = Date.parse(event.start_date);
-            var to = Date.parse(event.end_date);
-            if (Date.now() >= from) {
+            var to = new Date(Date.parse(event.end_date));
+            to.setDate(to.getDate() + 1);
+            if (Date.now() > from) {
                 if (Date.now() <= to) {
                     event_info.now.push(event);
                 } else {
+                    console.log(Date.now() + " " + event.start_date + " " + event.end_date + " " + event.name)
                     event_info.past.push(event);
                 }
             } else {
