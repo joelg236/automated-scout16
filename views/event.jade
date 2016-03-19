@@ -21,7 +21,8 @@ block content
             tbody
                 each team in teams
                     tr
-                        td= team.number
+                        td
+                            a(href="https://www.thebluealliance.com/team/#{team.number}") #{team.number}
                         td= team.opr.toFixed(2)
                         td= team.rank_points
                         td= (team.rank_points + team.predicted_rank_points).toFixed(2)
