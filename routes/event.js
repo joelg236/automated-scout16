@@ -28,7 +28,9 @@ router.get('/*', function(req, res, next) {
             console.error(err);
         } else {
             var teams = {};
-            matches.forEach(function(match) {
+            matches.filter(function(match) {
+                return match.comp_level === 'qm';
+            }).forEach(function(match) {
                 if (match.score_breakdown != null) { // match has happened
                     for (alliance_name in match.alliances) { // red & blue
                         var alliance = match.alliances[alliance_name];
@@ -145,7 +147,11 @@ router.get('/*', function(req, res, next) {
 
             var predictions_correct = 0, predictions_incorrect = 0;
             matches = matches.sort(function(a, b) {
-                return a.match_number - b.match_number;
+                if (a.comp_level === b.comp_level) {
+                    return a.match_number - b.match_number;
+                } else {
+                    return a.comp_level === 'qm' ? -1 : 1;
+                }
             }).map(function(match) {
                 if (match.comp_level === 'qm') {
                     match.comp_level = 'Qualification';
@@ -196,9 +202,8 @@ router.get('/*', function(req, res, next) {
                 return match;
             });
 
-            for (match in matches) {
-                var match = matches[match];
-                if (match.score_breakdown == null) {
+            matches.forEach(function(match) {
+                if (match.score_breakdown == null && match.comp_level === 'Qualification') {
                     if (match.predicted_score.blue > match.predicted_score.red) {
                         teams[match.alliances.blue.teams[0]].predicted_rank_points += 2;
                         teams[match.alliances.blue.teams[1]].predicted_rank_points += 2;
@@ -221,7 +226,7 @@ router.get('/*', function(req, res, next) {
                     teams[match.alliances.blue.teams[1]].predicted_rank_points += match.predicted_capture.blue;
                     teams[match.alliances.blue.teams[2]].predicted_rank_points += match.predicted_capture.blue;
                 }
-            }
+            });
 
             var team_array = [];
             for (team_id in teams) {
