@@ -10,6 +10,12 @@ block content
                 th OPR
                 th Rank Points
                 th Predicted Rank Points
+                th Rank Value
+                th Breach OPR
+                th Captures OPR
+                th Defense OPR
+                th Scales OPR
+                th Challenge OPR
             tbody
                 each team in teams
                     tr
@@ -17,6 +23,12 @@ block content
                         td= team.opr.toFixed(2)
                         td= team.rank_points
                         td= team.rank_points + team.predicted_rank_points
+                        td= (team.opr / (team.rank_points + team.predicted_rank_points)).toFixed(2)
+                        td= team.breaches_opr.toFixed(2)
+                        td= team.captures_opr.toFixed(2)
+                        td= team.defense_opr.toFixed(2)
+                        td= team.scales_opr.toFixed(2)
+                        td= team.challenge_opr.toFixed(2)
 
     h2 Matches
 

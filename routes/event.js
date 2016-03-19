@@ -7,11 +7,18 @@ function Team(id) {
     this.number = Number(id.substr(3));
     this.id = id;
     this.matches = [];
-    this.opr = 0;
     this.rank_points = 0;
     this.breaches = 0;
+    this.breach_opr = 0;
     this.captures = 0;
+    this.capture_opr;
+    this.defense = 0;
+    this.defense_opr = 0;
     this.scales = 0;
+    this.scales_opr = 0;
+    this.challenge = 0;
+    this.challenge_opr = 0;
+    this.opr = 0;
     this.predicted_rank_points = 0;
 }
 
@@ -45,9 +52,12 @@ router.get('/*', function(req, res, next) {
                                 teams[team_id].rank_points += 1;
                                 teams[team_id].breaches += 1;
                             }
-                            if (alliance.breakdown.teleopScalePoints == 15) {
+                            if (alliance.breakdown.teleopScalePoints >= 15) {
                                 teams[team_id].scales += 1;
                             }
+
+                            teams[team_id].defense += alliance.breakdown.teleopCrossingPoints;
+                            teams[team_id].challenge += alliance.breakdown.teleopChallengePoints;
 
                             teams[team_id].matches.push(alliance);
                         });
@@ -56,6 +66,11 @@ router.get('/*', function(req, res, next) {
             });
 
             var team_numbers = [],
+                breaches = [],
+                captures = [],
+                defense = [],
+                scales = [],
+                challenge = [],
                 points = [],
                 num_teams = Object.keys(teams).length,
                 played = new Array(num_teams);
@@ -69,6 +84,12 @@ router.get('/*', function(req, res, next) {
 
             for (team_id in teams) {
                 team_numbers.push(teams[team_id].number);
+
+                breaches.push(teams[team_id].breaches);
+                captures.push(teams[team_id].captures);
+                defense.push(teams[team_id].defense);
+                scales.push(teams[team_id].scales);
+                challenge.push(teams[team_id].challenge);
 
                 points.push(teams[team_id].matches.reduce(function (sum, match) {
                     return sum + match.score; // sum of points
@@ -101,6 +122,26 @@ router.get('/*', function(req, res, next) {
             opr.forEach(function(e, i) {
                 teams['frc' + team_numbers[i]].opr = e;
             });
+            var breaches = numeric.solve(played, breaches);
+            breaches.forEach(function(e, i) {
+                teams['frc' + team_numbers[i]].breaches_opr = e;
+            });
+            var captures = numeric.solve(played, captures);
+            captures.forEach(function(e, i) {
+                teams['frc' + team_numbers[i]].captures_opr = e;
+            });
+            var defense = numeric.solve(played, defense);
+            defense.forEach(function(e, i) {
+                teams['frc' + team_numbers[i]].defense_opr = e;
+            });
+            var scales = numeric.solve(played, scales);
+            scales.forEach(function(e, i) {
+                teams['frc' + team_numbers[i]].scales_opr = e;
+            });
+            var challenge = numeric.solve(played, challenge);
+            challenge.forEach(function(e, i) {
+                teams['frc' + team_numbers[i]].challenge_opr = e;
+            });
 
             matches = matches.sort(function(a, b) {
                 return a.match_number - b.match_number;
@@ -129,15 +170,15 @@ router.get('/*', function(req, res, next) {
             for (match in matches) {
                 var match = matches[match];
                 if (match.score_breakdown == null) {
-                        if (match.predicted_score.blue > match.predicted_score.red) {
-                            teams[match.alliances.blue.teams[0]].predicted_rank_points += 2;
-                            teams[match.alliances.blue.teams[1]].predicted_rank_points += 2;
-                            teams[match.alliances.blue.teams[2]].predicted_rank_points += 2;
-                        } else if (match.predicted_score.red > match.predicted_score.blue) {
-                            teams[match.alliances.red.teams[0]].predicted_rank_points += 2;
-                            teams[match.alliances.red.teams[1]].predicted_rank_points += 2;
-                            teams[match.alliances.red.teams[2]].predicted_rank_points += 2;
-                        }
+                    if (match.predicted_score.blue > match.predicted_score.red) {
+                        teams[match.alliances.blue.teams[0]].predicted_rank_points += 2;
+                        teams[match.alliances.blue.teams[1]].predicted_rank_points += 2;
+                        teams[match.alliances.blue.teams[2]].predicted_rank_points += 2;
+                    } else if (match.predicted_score.red > match.predicted_score.blue) {
+                        teams[match.alliances.red.teams[0]].predicted_rank_points += 2;
+                        teams[match.alliances.red.teams[1]].predicted_rank_points += 2;
+                        teams[match.alliances.red.teams[2]].predicted_rank_points += 2;
+                    }
                 }
             }
 
