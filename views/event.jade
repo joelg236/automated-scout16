@@ -31,7 +31,7 @@ block content
             if scores.red.score !== -1
                 div Red: #{scores.red.score}
             else
-                div Red (P): #{match.predicted_score.red}
+                div Red (P): #{match.predicted_score.red.toFixed(2)}
 
             each team in scores.red.teams
                 a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')
@@ -41,7 +41,7 @@ block content
             if scores.blue.score !== -1
                 div Blue: #{scores.blue.score}
             else
-                div Blue (P): #{match.predicted_score.blue}
+                div Blue (P): #{match.predicted_score.blue.toFixed(2)}
 
             each team in scores.blue.teams
                 a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')

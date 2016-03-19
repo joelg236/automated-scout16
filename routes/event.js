@@ -96,6 +96,7 @@ router.get('/*', function(req, res, next) {
                 }
             });
 
+            // solve OPR
             var opr = numeric.solve(played, points);
             opr.forEach(function(e, i) {
                 teams['frc' + team_numbers[i]].opr = e;
@@ -112,14 +113,14 @@ router.get('/*', function(req, res, next) {
 
                 if (a.score_breakdown == null) {
                     var blue_score = 0, red_score = 0;
-                    blue_score += teams[a.alliances.blue.teams[0]].opr;
-                    blue_score += teams[a.alliances.blue.teams[1]].opr;
-                    blue_score += teams[a.alliances.blue.teams[2]].opr;
-                    red_score += teams[a.alliances.red.teams[0]].opr;
-                    red_score += teams[a.alliances.red.teams[1]].opr;
-                    red_score += teams[a.alliances.red.teams[2]].opr;
+                    blue_score = teams[a.alliances.blue.teams[0]].opr
+                               + teams[a.alliances.blue.teams[1]].opr
+                               + teams[a.alliances.blue.teams[2]].opr;
+                    red_score = teams[a.alliances.red.teams[0]].opr
+                              + teams[a.alliances.red.teams[1]].opr
+                              + teams[a.alliances.red.teams[2]].opr;
 
-                    a.predicted_score = { blue: blue_score.toFixed(2), red: red_score.toFixed(2) };
+                    a.predicted_score = { blue: blue_score, red: red_score };
                 }
 
                 return a;
@@ -145,7 +146,8 @@ router.get('/*', function(req, res, next) {
                 team_array.push(teams[team_id]);
             }
             var team_array = team_array.sort(function (a, b) {
-                return b.opr - a.opr;
+                var comp = (b.predicted_rank_points + b.rank_points) - (a.predicted_rank_points + a.rank_points);
+                return comp == 0 ? b.opr - a.opr : comp;
             });
             res.render('event', {
                 title: 'Automated Scout',
