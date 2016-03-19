@@ -43,18 +43,18 @@ block content
 
         div.panel-body
             if scores.red.score !== -1
-                div Red: #{scores.red.score}
+                div Red: #{scores.red.score} (Predicted was #{match.predicted_score.red.toFixed(2)})
             else
-                div Red (P): #{match.predicted_score.red.toFixed(2)} (Breach #{match.predicted_breach.red.toFixed(2)}) (Capture #{match.predicted_capture.red.toFixed(2)})
+                div Red (Predicted): #{match.predicted_score.red.toFixed(2)} (Breach #{match.predicted_breach.red.toFixed(2)}) (Capture #{match.predicted_capture.red.toFixed(2)})
             each team in scores.red.teams
                 a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')
                     span.label.label-danger #{team}
 
         div.panel-body
             if scores.blue.score !== -1
-                div Blue: #{scores.blue.score}
+                div Blue: #{scores.blue.score} (Predicted was #{match.predicted_score.blue.toFixed(2)})
             else
-                div Blue (P): #{match.predicted_score.blue.toFixed(2)} (Breach #{match.predicted_breach.blue.toFixed(2)}) (Capture #{match.predicted_capture.blue.toFixed(2)})
+                div Blue (Predicted): #{match.predicted_score.blue.toFixed(2)} (Breach #{match.predicted_breach.blue.toFixed(2)}) (Capture #{match.predicted_capture.blue.toFixed(2)})
 
             each team in scores.blue.teams
                 a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')
