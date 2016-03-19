@@ -1,0 +1,8 @@
+extends layout
+
+block content
+    h1= team.nickname
+    p= team.name
+    each event in events
+        h3
+            a(href='/event/#{event.key}') #{event.name}
