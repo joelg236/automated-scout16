@@ -3,6 +3,8 @@ extends layout
 block content
     h1 #{title} #{event}
 
+    i Accuracy of OPR predictor so far: #{prediction_rate.toFixed(3)}
+
     table.table.sortable
         thead
             tr

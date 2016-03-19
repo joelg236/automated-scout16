@@ -143,6 +143,7 @@ router.get('/*', function(req, res, next) {
                 teams['frc' + team_numbers[i]].challenge_opr = e;
             });
 
+            var predictions_correct = 0, predictions_incorrect = 0;
             matches = matches.sort(function(a, b) {
                 return a.match_number - b.match_number;
             }).map(function(match) {
@@ -152,30 +153,45 @@ router.get('/*', function(req, res, next) {
                     match.comp_level = 'Elimination';
                 }
 
-                if (match.score_breakdown == null) {
-                    var blue_score = teams[match.alliances.blue.teams[0]].opr
-                                   + teams[match.alliances.blue.teams[1]].opr
-                                   + teams[match.alliances.blue.teams[2]].opr;
-                    var red_score = teams[match.alliances.red.teams[0]].opr
-                                  + teams[match.alliances.red.teams[1]].opr
-                                  + teams[match.alliances.red.teams[2]].opr;
-                    var blue_breach = teams[match.alliances.blue.teams[0]].breaches_opr
-                                     + teams[match.alliances.blue.teams[1]].breaches_opr
-                                     + teams[match.alliances.blue.teams[2]].breaches_opr;
-                    var red_breach = teams[match.alliances.red.teams[0]].breaches_opr
-                                    + teams[match.alliances.red.teams[1]].breaches_opr
-                                    + teams[match.alliances.red.teams[2]].breaches_opr;
-                    var blue_capture = teams[match.alliances.blue.teams[0]].captures_opr
-                                     + teams[match.alliances.blue.teams[1]].captures_opr
-                                     + teams[match.alliances.blue.teams[2]].captures_opr;
-                    var red_capture = teams[match.alliances.red.teams[0]].captures_opr
-                                    + teams[match.alliances.red.teams[1]].captures_opr
-                                    + teams[match.alliances.red.teams[2]].captures_opr;
+                var blue_score = teams[match.alliances.blue.teams[0]].opr
+                               + teams[match.alliances.blue.teams[1]].opr
+                               + teams[match.alliances.blue.teams[2]].opr;
+                var red_score = teams[match.alliances.red.teams[0]].opr
+                              + teams[match.alliances.red.teams[1]].opr
+                              + teams[match.alliances.red.teams[2]].opr;
+                var blue_breach = teams[match.alliances.blue.teams[0]].breaches_opr
+                                 + teams[match.alliances.blue.teams[1]].breaches_opr
+                                 + teams[match.alliances.blue.teams[2]].breaches_opr;
+                var red_breach = teams[match.alliances.red.teams[0]].breaches_opr
+                                + teams[match.alliances.red.teams[1]].breaches_opr
+                                + teams[match.alliances.red.teams[2]].breaches_opr;
+                var blue_capture = teams[match.alliances.blue.teams[0]].captures_opr
+                                 + teams[match.alliances.blue.teams[1]].captures_opr
+                                 + teams[match.alliances.blue.teams[2]].captures_opr;
+                var red_capture = teams[match.alliances.red.teams[0]].captures_opr
+                                + teams[match.alliances.red.teams[1]].captures_opr
+                                + teams[match.alliances.red.teams[2]].captures_opr;
 
-                    match.predicted_score = { blue: blue_score, red: red_score };
-                    match.predicted_breach = { blue: blue_breach, red: red_breach };
-                    match.predicted_capture = { blue: blue_capture, red: red_capture };
+                if (match.score_breakdown != null) {
+                    // prediction of old match
+                    if (match.alliances.red.score > match.alliances.blue.score) {
+                        if (red_score > blue_score) {
+                            predictions_correct++;
+                        } else {
+                            predictions_incorrect++;
+                        }
+                    } else {
+                        if (blue_score > red_score) {
+                            predictions_correct++;
+                        } else {
+                            predictions_incorrect++;
+                        }
+                    }
                 }
+
+                match.predicted_score = { blue: blue_score, red: red_score };
+                match.predicted_breach = { blue: blue_breach, red: red_breach };
+                match.predicted_capture = { blue: blue_capture, red: red_capture };
 
                 return match;
             });
@@ -219,7 +235,8 @@ router.get('/*', function(req, res, next) {
                 title: 'Automated Scout',
                 event: req.url.substring(1),
                 teams: team_array,
-                matches: matches
+                matches: matches,
+                prediction_rate: 100 * (predictions_correct / (predictions_correct + predictions_incorrect))
             });
         }
     });
