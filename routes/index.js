@@ -23,7 +23,6 @@ tba.getListOfEvents(function(err, data) {
                 if (Date.now() <= to) {
                     event_info.now.push(event);
                 } else {
-                    console.log(Date.now() + " " + event.start_date + " " + event.end_date + " " + event.name)
                     event_info.past.push(event);
                 }
             } else {

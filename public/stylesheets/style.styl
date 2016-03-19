@@ -3,3 +3,10 @@ body
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
 a
   color: #00B7FF
+
+table.sortable thead
+    cursor: pointer
+
+table.sortable
+    th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after
+        content: " \25B4\25BE" 

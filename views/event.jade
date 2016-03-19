@@ -3,24 +3,20 @@ extends layout
 block content
     h1 #{title} #{event}
 
-    table.table
+    table.table.sortable
         thead
             tr
                 th Team
                 th OPR
-                th ROPR
-                th Wins
-                th PWins
-                th TWins
+                th Rank Points
+                th Predicted Rank Points
             tbody
                 each team in teams
                     tr
-                        td= team.team
+                        td= team.number
                         td= team.opr.toFixed(2)
-                        td= team.ropr.toFixed(2)
-                        td= team.won
-                        td= team.pwon
-                        td= team.won + team.pwon
+                        td= team.rank_points
+                        td= team.rank_points + team.predicted_rank_points
 
     h2 Matches
 
