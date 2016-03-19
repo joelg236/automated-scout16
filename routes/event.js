@@ -28,9 +28,10 @@ router.get('/*', function(req, res, next) {
             console.error(err);
         } else {
             var teams = {};
-            matches.filter(function(match) {
+            var quals = matches.filter(function(match) {
                 return match.comp_level === 'qm';
-            }).forEach(function(match) {
+            });
+            quals.forEach(function(match) {
                 if (match.score_breakdown != null) { // match has happened
                     for (alliance_name in match.alliances) { // red & blue
                         var alliance = match.alliances[alliance_name];
@@ -98,7 +99,7 @@ router.get('/*', function(req, res, next) {
                 }, 0));
             }
 
-            matches.forEach(function(match) {
+            quals.forEach(function(match) {
                 var redteams = match.alliances.red.teams.map(function (team_id) {
                     return team_numbers.indexOf(Number(team_id.substr(3)));
                 });
