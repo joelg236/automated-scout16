@@ -8,6 +8,7 @@ var stats = require('../data/stats')
 var predict = require('../data/eventdataprediction')
 
 router.get('/:event/:year', function(req, res, next) {
+    if (req.params.year !== '2016') return next();
     event.get_event(req.params.event, req.params.year, function(err, event) {
         if (err) {
             return next(err);
@@ -41,6 +42,7 @@ router.get('/:event/:year', function(req, res, next) {
 });
 
 router.get('/:event/:year/compare', function(req, res, next) {
+    if (req.params.year !== '2016') return next();
     eventdata.get_event_data(req.params.event, req.params.year, function(err, data, update) {
         if (err) {
             return next(err);

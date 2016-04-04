@@ -30,6 +30,7 @@ router.get('/:team/:year', function(req, res, next) {
 });
 
 router.get('/:team/:year/:event', function(req, res, next) {
+    if (req.params.year !== '2016') return next();
     team.get_team(req.params.team, req.params.year, function(err, team) {
         if (err) {
             return next(err);
