@@ -1,0 +1,84 @@
+extends layout
+
+block content
+    h1
+        a(href="/team/#{number}/#{year}") Team #{number}
+        |  #{name} in
+        a(href="/event/#{event_id}/#{year}")  #{event_id} (#{year})
+    p
+        a(href="https://www.thebluealliance.com/team/#{number}") TBA
+        |  Located in #{location}
+
+    if stats.teams.indexOf(id) !== -1
+        .col-lg-6
+            h3 Stats
+            ul.list-group
+                li.list-group-item OPR
+                    span.badge= stats.OPR[id].rank
+                    span.badge= stats.OPR[id].val.toFixed(2)
+                li.list-group-item DPR
+                    span.badge= stats.DPR[id].rank
+                    span.badge= stats.DPR[id].val.toFixed(2)
+                li.list-group-item CCWM
+                    span.badge= stats.CCWM[id].rank
+                    span.badge= stats.CCWM[id].val.toFixed(2)
+                li.list-group-item Rank Point
+                    span.badge= stats.rankpointOPR[id].rank
+                    span.badge= stats.rankpointOPR[id].val.toFixed(2)
+                li.list-group-item Fouls
+                    span.badge= stats.foulOPR[id].rank
+                    span.badge= stats.foulOPR[id].val.toFixed(2)
+            h4 Auto
+            ul.list-group
+                li.list-group-item High
+                    span.badge= stats.autoOPR.highOPR[id].rank
+                    span.badge= stats.autoOPR.highOPR[id].val.toFixed(2)
+                li.list-group-item Low
+                    span.badge= stats.autoOPR.lowOPR[id].rank
+                    span.badge= stats.autoOPR.lowOPR[id].val.toFixed(2)
+                li.list-group-item Cross
+                    span.badge= stats.autoOPR.crossOPR[id].rank
+                    span.badge= stats.autoOPR.crossOPR[id].val.toFixed(2)
+            h4 Teleop
+            ul.list-group
+                li.list-group-item High
+                    span.badge= stats.teleopOPR.highOPR[id].rank
+                    span.badge= stats.teleopOPR.highOPR[id].val.toFixed(2)
+                li.list-group-item Low
+                    span.badge= stats.teleopOPR.lowOPR[id].rank
+                    span.badge= stats.teleopOPR.lowOPR[id].val.toFixed(2)
+                li.list-group-item Damaging
+                    span.badge= stats.teleopOPR.damagingOPR[id].rank
+                    span.badge= stats.teleopOPR.damagingOPR[id].val.toFixed(2)
+                li.list-group-item Challenging
+                    span.badge= stats.teleopOPR.challengeOPR[id].rank
+                    span.badge= stats.teleopOPR.challengeOPR[id].val.toFixed(2)
+                li.list-group-item Scaling
+                    span.badge= stats.teleopOPR.scaleOPR[id].rank
+                    span.badge= stats.teleopOPR.scaleOPR[id].val.toFixed(2)
+                li.list-group-item Breach Point
+                    span.badge= stats.teleopOPR.breachOPR[id].rank
+                    span.badge= stats.teleopOPR.breachOPR[id].val.toFixed(2)
+                li.list-group-item Capture Point
+                    span.badge= stats.teleopOPR.captureOPR[id].rank
+                    span.badge= stats.teleopOPR.captureOPR[id].val.toFixed(2)
+            h4 Crossing
+            ul.list-group
+                li.list-group-item
+                    .btn-group.btn-group-justified
+                        a.btn.btn-default A #{stats.teleopOPR.crossingOPR.typeAOPR[id].val.toFixed(2)}
+                            b  : #{stats.teleopOPR.crossingOPR.typeAOPR[id].rank}
+                        a.btn.btn-default B #{stats.teleopOPR.crossingOPR.typeBOPR[id].val.toFixed(2)}
+                            b  : #{stats.teleopOPR.crossingOPR.typeBOPR[id].rank}
+                        a.btn.btn-default C #{stats.teleopOPR.crossingOPR.typeCOPR[id].val.toFixed(2)}
+                            b  : #{stats.teleopOPR.crossingOPR.typeCOPR[id].rank}
+                        a.btn.btn-default D #{stats.teleopOPR.crossingOPR.typeDOPR[id].val.toFixed(2)}
+                            b  : #{stats.teleopOPR.crossingOPR.typeDOPR[id].rank}
+                        a.btn.btn-default L #{stats.teleopOPR.crossingOPR.lowbarOPR[id].val.toFixed(2)}
+                            b  : #{stats.teleopOPR.crossingOPR.lowbarOPR[id].rank}
+
+
+    if typeof(picture) !== 'undefined'
+        .col-lg-6
+            .well.well-sm
+                img(src="#{picture}" width="100%" height="30%")

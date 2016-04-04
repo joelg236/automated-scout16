@@ -1,62 +1,56 @@
 extends layout
 
 block content
-    h1 #{title} #{event}
+    .container
+        h1 #{name} #{year}
+        p
+            | #{start_date.getDate()}/#{start_date.getMonth()}
+            | to #{end_date.getDate()}/#{end_date.getMonth()}
+            | in #{location}
 
-    i Accuracy of OPR predictor so far: #{prediction_rate.toFixed(3)}
-
-    table.table.sortable
-        thead
-            tr
-                th Team
-                th OPR
-                th Rank Points
-                th Predicted Rank Points
-                th Rank Value
-                th Breach OPR
-                th Captures OPR
-                th Defense OPR
-                th Scales OPR
-                th Challenge OPR
-            tbody
+        .row
+            a(href="/event/#{id}/#{year}/compare").btn.btn-info.btn-block(style="margin: 15px 0")
+                span.glyphicon.glyphicon-star Compare
+            ul.list-group
                 each team in teams
-                    tr
-                        td
-                            a(href="https://www.thebluealliance.com/team/#{team.number}") #{team.number}
-                        td= team.opr.toFixed(2)
-                        td= team.rank_points
-                        td= (team.rank_points + team.predicted_rank_points).toFixed(2)
-                        td= (team.opr / (team.rank_points + team.predicted_rank_points)).toFixed(2)
-                        td= team.breaches_opr.toFixed(2)
-                        td= team.captures_opr.toFixed(2)
-                        td= team.defense_opr.toFixed(2)
-                        td= team.scales_opr.toFixed(2)
-                        td= team.challenge_opr.toFixed(2)
+                    .col-md-4
+                        a(href="/team/#{team}/#{year}/#{id}")
+                            li.list-group-item
+                                Team #{team}
 
-    h2 Matches
+        .row(style="margin-top: 25px")
+            p Predictor (#{pred.best_predictor}) has been #{pred.best_results.toFixed(1)}% accurate.
+            each match, ind in event.lineups
+                .col-lg-4
+                    li.well(style="background:white")
+                        p #{match.match_number} #{match.level}
+                        if match.red.won
+                            .well: b
+                                |  #{match.red.teams[0].substring(3)},
+                                |  #{match.red.teams[1].substring(3)},
+                                |  #{match.red.teams[2].substring(3)}
+                                |  - #{match.red.points}
+                                | P #{pred.prediction[ind].red.points[pred.best_predictor].toFixed(0)}
+                        else
+                            .well
+                                |  #{match.red.teams[0].substring(3)},
+                                |  #{match.red.teams[1].substring(3)},
+                                |  #{match.red.teams[2].substring(3)}
+                                |  - #{match.red.points}
+                                | P #{pred.prediction[ind].red.points[pred.best_predictor].toFixed(0)}
 
-    div.panel.panel-default
-    each match in matches
-        h3
-            a(href='https://www.thebluealliance.com/match/#{match.key}') #{match.comp_level} #{match.match_number}
+                        if match.blue.won
+                            .well: b
+                                |  #{match.blue.teams[0].substring(3)},
+                                |  #{match.blue.teams[1].substring(3)},
+                                |  #{match.blue.teams[2].substring(3)}
+                                |  - #{match.blue.points}
+                                | P #{pred.prediction[ind].blue.points[pred.best_predictor].toFixed(0)}
+                        else
+                            .well
+                                |  #{match.blue.teams[0].substring(3)},
+                                |  #{match.blue.teams[1].substring(3)},
+                                |  #{match.blue.teams[2].substring(3)}
+                                |  - #{match.blue.points}
+                                | P #{pred.prediction[ind].blue.points[pred.best_predictor].toFixed(0)}
 
-        - var scores = match.alliances
-
-        div.panel-body
-            if scores.red.score !== -1
-                div Red: #{scores.red.score} (Predicted was #{match.predicted_score.red.toFixed(2)})
-            else
-                div Red (Predicted): #{match.predicted_score.red.toFixed(2)} (Breach #{match.predicted_breach.red.toFixed(2)}) (Capture #{match.predicted_capture.red.toFixed(2)})
-            each team in scores.red.teams
-                a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')
-                    span.label.label-danger #{team}
-
-        div.panel-body
-            if scores.blue.score !== -1
-                div Blue: #{scores.blue.score} (Predicted was #{match.predicted_score.blue.toFixed(2)})
-            else
-                div Blue (Predicted): #{match.predicted_score.blue.toFixed(2)} (Breach #{match.predicted_breach.blue.toFixed(2)}) (Capture #{match.predicted_capture.blue.toFixed(2)})
-
-            each team in scores.blue.teams
-                a(href='https://www.thebluealliance.com/team/#{team.substr(3)}')
-                    span.label.label-primary #{team}

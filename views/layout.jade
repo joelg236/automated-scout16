@@ -9,6 +9,8 @@ html
     script(src="/javascript/sorttable.js")
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    nav.navbar.navbar-default.navbar-fixed-top
+      .navbar-header
+      a.navbar-brand(href="/") Home
     div.container
-      div.row
-        block content
+      block content

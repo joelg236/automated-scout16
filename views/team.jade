@@ -1,8 +1,18 @@
 extends layout
 
 block content
-    h1= team.nickname
-    p= team.name
-    each event in events
-        h3
-            a(href='/event/#{event.key}') #{event.name}
+    h1 Team #{number} #{name}
+    p
+        a(href="https://www.thebluealliance.com/team/#{number}") TBA
+        |  Located in #{location}
+    .col-lg-6
+        each event in events
+            h3
+                span.badge #{event.start_date}
+                a(href="/team/#{number}/#{year}/#{event.id}")   #{event.name}
+            p
+                a(href="/event/#{event.id}/#{year}")  (Event Page)
+    if typeof(picture) !== 'undefined'
+        .col-lg-6
+            .well.well-sm
+                img(src="#{picture}" width="100%" height="30%")

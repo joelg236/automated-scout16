@@ -1,0 +1,42 @@
+extends layout
+
+block content
+    .container
+        table.table.sortable
+            thead
+                tr
+                    th Team
+                    th Rank
+                    th Rank Points
+                    th Predicted (#{pred.best_results.toFixed(0)}%)
+                    th OPR Rank
+                    th OPR
+                    th DPR Rank
+                    th DPR
+                    th CCWM Rank
+                    th CCWM
+                    th Auto
+                    th High Goal
+                    th Low Goal
+                    th Damaging
+                    th Scale
+                tbody
+                    each team in teams
+                        - var teamnumber = team.substring(3)
+                        tr
+                            td
+                                a(href="/team/#{teamnumber}/#{year}/#{id}") #{teamnumber}
+                            td= event.rank[team]
+                            td= event.rank_points[team]
+                            td= pred.teams[team].rank_points + event.rank_points[team]
+                            td= stats.OPR[team].rank
+                            td= stats.OPR[team].val.toFixed(2)
+                            td= stats.DPR[team].rank
+                            td= stats.DPR[team].val.toFixed(2)
+                            td= stats.CCWM[team].rank
+                            td= stats.CCWM[team].val.toFixed(2)
+                            td= (stats.autoOPR.highOPR[team].val + stats.autoOPR.crossOPR[team].val).toFixed(2)
+                            td= stats.teleopOPR.highOPR[team].val.toFixed(2)
+                            td= stats.teleopOPR.lowOPR[team].val.toFixed(2)
+                            td= stats.teleopOPR.damagingOPR[team].val.toFixed(2)
+                            td= stats.teleopOPR.scaleOPR[team].val.toFixed(2)
