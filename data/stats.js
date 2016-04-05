@@ -18,7 +18,7 @@ function OPR(teams, played, stat) {
 function component_opr(teams, played, matches, callback) {
     return new OPR(teams, played, teams.map(function(team) {
         return matches.filter(function(match) {
-            return match.teams.indexOf(team) !== -1;
+            return match.played && match.teams.indexOf(team) !== -1;
         }).reduce(function(sum, match) {
             return sum + callback(match);
         }, 0);
@@ -29,7 +29,11 @@ function convert_stat(tba, teams) {
     var stat = {};
 
     teams.map(function(team) {
-        return { team: team, val: tba[team.substring(3)] };
+        if (typeof tba !== 'undefined') {
+            return { team: team, val: tba[team.substring(3)] };
+        } else {
+            return { team: team, val: NaN };
+        }
     }).sort(function(a, b) {
         return b.val - a.val;
     }).forEach(function(d, rank) {

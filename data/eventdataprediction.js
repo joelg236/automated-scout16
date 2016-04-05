@@ -96,7 +96,7 @@ function Prediction(matches, stats) {
         }
     });
 
-    var best_predictor, best_results = 0;
+    var best_predictor = 'OPR', best_results = 0;
     for (type in prediction_accuracy) {
         prediction_accuracy[type] /= matches.length;
         if (prediction_accuracy[type] > best_results) {
