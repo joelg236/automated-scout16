@@ -16,12 +16,12 @@ block content
                         - function avg(arr) {
                         -     return arr.reduce(function (p, c) {
                         -         return p + c;
-                        -     }) / arr.length;
+                        -     }, 0) / arr.length;
                         - }
                         tr
                             td
                                 a(href="/team/#{teamnumber}/#{year}/#{id}") #{teamnumber}
-                            td= Math.max.apply(null, data.OPRs[team])
-                            td= avg(data.OPRs[team])
-                            td= Math.max.apply(null, data.CCWMs[team])
-                            td= avg(data.CCWMs[team])
+                            td= Math.max.apply(null, data.OPRs[team]).toFixed(2)
+                            td= avg(data.OPRs[team]).toFixed(2)
+                            td= Math.max.apply(null, data.CCWMs[team]).toFixed(2)
+                            td= avg(data.CCWMs[team]).toFixed(2)
