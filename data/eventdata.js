@@ -95,7 +95,7 @@ function EventData(data) {
     var rank_points = {};
     this.teams.forEach(function(team) {
         rank_points[team] = qual_matches.filter(function(match) {
-            return match.teams.indexOf(team) !== -1;
+            return match.played && match.teams.indexOf(team) !== -1;
         }).reduce(function(sum, match) {
             return sum + match.rank_points;
         }, 0);

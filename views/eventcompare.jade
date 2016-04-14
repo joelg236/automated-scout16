@@ -28,7 +28,7 @@ block content
                                 a(href="/team/#{teamnumber}/#{year}/#{id}") #{teamnumber}
                             td= event.rank[team]
                             td= event.rank_points[team]
-                            td= pred.teams[team].rank_points + event.rank_points[team]
+                            td= (pred.teams[team].rank_points + event.rank_points[team]).toFixed(1)
                             td= stats.OPR[team].rank
                             td= stats.OPR[team].val.toFixed(2)
                             td= stats.DPR[team].rank
