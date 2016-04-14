@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    .container
+        table.table.sortable
+            thead
+                tr
+                    th Team
+                    th Max OPR
+                    th Average OPR
+                    th Max CCWM
+                    th Average CCWM
+                tbody
+                    each team in data.teams
+                        - var teamnumber = team.substring(3)
+                        - function avg(arr) {
+                        -     return arr.reduce(function (p, c) {
+                        -         return p + c;
+                        -     }) / arr.length;
+                        - }
+                        tr
+                            td
+                                a(href="/team/#{teamnumber}/#{year}/#{id}") #{teamnumber}
+                            td= Math.max.apply(null, data.OPRs[team])
+                            td= avg(data.OPRs[team])
+                            td= Math.max.apply(null, data.CCWMs[team])
+                            td= avg(data.CCWMs[team])
