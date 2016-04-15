@@ -98,7 +98,9 @@ function Prediction(matches, stats) {
 
     var best_predictor = 'OPR', best_results = 0;
     for (type in prediction_accuracy) {
-        prediction_accuracy[type] /= matches.length;
+        prediction_accuracy[type] /= matches.filter(function(match) {
+            return match.played;
+        }).length;
         if (prediction_accuracy[type] > best_results) {
             best_predictor = type;
             best_results = prediction_accuracy[type];
