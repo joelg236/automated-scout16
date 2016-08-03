@@ -10,3 +10,8 @@ To run yourself,
     npm start
 
 And go to http://localhost:3000
+
+![](https://i.imgur.com/WZVaOlB.png)
+
+
+![](https://i.imgur.com/GoSKgMh.png)
